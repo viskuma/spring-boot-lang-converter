@@ -1,0 +1,27 @@
+# Port on which the service will run
+server.port=8082
+
+# Service name
+spring.application.name=eng2hindi-service
+
+# Load balancer configuration
+spring.cloud.gateway.routes[0].id=eng2hindi
+spring.cloud.gateway.routes[0].uri=lb://eng2hindi-service
+spring.cloud.gateway.routes[0].predicates[0]=Path=/eng2hindi/**
+spring.cloud.gateway.routes[0].filters[0]=StripPrefix=1
+server.port=8082
+
+
+#Description:
+#
+#No spring.config.import property has been defined
+#
+#Action:
+#
+#Add a spring.config.import=configserver: property to your configuration.
+#	If configuration is not required add spring.config.import=optional:configserver: instead.
+#	To disable this check, set spring.cloud.config.enabled=false or 
+#	spring.cloud.config.import-check.enabled=false.
+
+spring.cloud.config.enabled=false
+spring.cloud.config.import-check.enabled=false
