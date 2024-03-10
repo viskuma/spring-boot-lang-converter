@@ -1,4 +1,4 @@
-package com.viskuma.langtrans.eng2hindi.db;
+package com.viskuma.langtrans.eng2french.db;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,10 +18,9 @@ public class LanguageMapEntity {
 	private String sourceText ;
 	private String targetText ;
 	private String model;
-	
-	//https://thorben-janssen.com/jpa-generate-primary-keys/
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     public Long getId() {

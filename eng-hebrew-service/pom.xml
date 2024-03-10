@@ -9,10 +9,10 @@
 		<version>3.2.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.viskuma.engfrench</groupId>
-	<artifactId>langtrans-engfrench</artifactId>
+	<groupId>com.viskuma.enghebrew</groupId>
+	<artifactId>langtrans-enghebrew</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>langtrans-engfrench</name>
+	<name>langtrans-enghebrew</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
@@ -40,13 +40,12 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Ribbon START -->
-		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-ribbon -->
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
 		</dependency>
-		<!-- Ribbon END -->
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>

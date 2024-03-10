@@ -1,4 +1,4 @@
-package com.viskuma.langtrans.eng2hindi.db;
+package com.viskuma.langtrans.eng2hebrew.db;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

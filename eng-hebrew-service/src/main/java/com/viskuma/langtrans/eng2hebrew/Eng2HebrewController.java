@@ -1,17 +1,17 @@
-package com.viskuma.langtrans.eng2french.application;
+package com.viskuma.langtrans.eng2hebrew;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.viskuma.langtrans.eng2french.db.LanguageMapEntity;
+import com.viskuma.langtrans.eng2hebrew.db.LanguageMapEntity;
 
 @RestController
-class Eng2FrenchController {
+class Eng2HindiController {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -19,22 +19,17 @@ class Eng2FrenchController {
     @Autowired
     LanguageMapEntityJpaRepository repository;
     
-    @PostMapping("/tofrench")
-    public ResponseEntity<String> convertToFrench(@RequestBody LanguageMapEntity requestBody) {
+    @PostMapping(path = "/tohindi")
+   // @Autowired
+    public ResponseEntity<String> convertToHindi(@RequestBody LanguageMapEntity requestBody) {
+    	
     	String targetText = repository.findTargetTextBySourceLanguageAndTargetLanguageAndSourceText(
     			requestBody.getSourceLanguage(), requestBody.getTargetLanguage(), requestBody.getSourceText() );
     	if(targetText != null) {
     		 return ResponseEntity.ok(targetText);
     	}
-    	ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-    	if(requestBody.getSourceText().split(" ").length <= 2) {
         // Call the language conversion service (mocked here)
-    		//MBart 
-    		response = restTemplate.postForEntity("http://localhost:5000/translatetext", requestBody, String.class);
-    	}else {
-    		//OpenAI
-    		response = restTemplate.postForEntity("http://localhost:5001/translatetext", requestBody, String.class);
-    	}
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:5000/translatetext", requestBody, String.class);
         if(response.getBody() != null) {
         	requestBody.setTargetText(response.getBody());
         	repository.save(requestBody);
@@ -42,4 +37,10 @@ class Eng2FrenchController {
         // Process the response or return it directly
         return ResponseEntity.ok(response.getBody());
     }
+    
+    @GetMapping(path = "/eng2hindi/message")
+    public String getMessage( String requestBody) {
+    	return "Hi";
+    }
 }
+    
