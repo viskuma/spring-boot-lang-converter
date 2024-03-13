@@ -1,4 +1,6 @@
 package com.viskuma.langtrans.eng2hindi;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +17,5 @@ public interface LanguageMapEntityJpaRepository extends JpaRepository<LanguageMa
 	@Override
 	public LanguageMapEntity save(LanguageMapEntity languageMapEntity);
 	
+	List<LanguageMapEntity> findBySourceLanguageAndTargetLanguage(String sourceLanguage, String targetLanguage);
 }

@@ -20,6 +20,8 @@ public class ApiGatewayApplication {
                         .uri("lb://eng2hindi-service/"))
                 .route("eng2french", r -> r.path("/tofrench/**")
                         .uri("lb://eng2french-service"))
+                .route("eng2hebrew", r -> r.path("/tohebrew/**")
+                        .uri("lb://eng2hebrew-service"))
                 .build();
     }
 }

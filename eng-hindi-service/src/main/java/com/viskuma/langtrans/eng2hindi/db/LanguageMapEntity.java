@@ -1,10 +1,12 @@
 package com.viskuma.langtrans.eng2hindi.db;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,6 +24,10 @@ public class LanguageMapEntity {
 	//https://thorben-janssen.com/jpa-generate-primary-keys/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+   // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_generator")
+    //@SequenceGenerator(name="id_generator", sequenceName = "LANGUAGE_MAP_ENTITY_SEQ", allocationSize=5)
+    
+   // LANGUAGE_MAP_ENTITY_SEQ
     private Long id;
 
     public Long getId() {
@@ -65,5 +71,32 @@ public class LanguageMapEntity {
 	public void setModel(String model) {
 		this.model = model;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, model, sourceLanguage, sourceText, targetLanguage, targetText);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LanguageMapEntity other = (LanguageMapEntity) obj;
+		return Objects.equals(id, other.id) && Objects.equals(model, other.model)
+				&& Objects.equals(sourceLanguage, other.sourceLanguage) && Objects.equals(sourceText, other.sourceText)
+				&& Objects.equals(targetLanguage, other.targetLanguage) && Objects.equals(targetText, other.targetText);
+	}
+
+	@Override
+	public String toString() {
+		return "LanguageMapEntity [" + (sourceLanguage != null ? "sourceLanguage=" + sourceLanguage + ", " : "")
+				+ (targetLanguage != null ? "targetLanguage=" + targetLanguage + ", " : "")
+				+ (sourceText != null ? "sourceText=" + sourceText : "") + "]";
+	}
+
 		
 }

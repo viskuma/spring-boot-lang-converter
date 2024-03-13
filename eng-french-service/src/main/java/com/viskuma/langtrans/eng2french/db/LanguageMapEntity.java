@@ -1,5 +1,9 @@
 package com.viskuma.langtrans.eng2french.db;
 
+import java.util.Objects;
+
+import com.viskuma.langtrans.eng2french.db.LanguageMapEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,13 +18,13 @@ import jakarta.persistence.Table;
 public class LanguageMapEntity {
 
 	private String sourceLanguage = "en_XX";  
-	private String targetLanguage = "hi_IN";  
+	private String targetLanguage = "fr_XX";  
 	private String sourceText ;
 	private String targetText ;
 	private String model;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     public Long getId() {
@@ -64,5 +68,31 @@ public class LanguageMapEntity {
 	public void setModel(String model) {
 		this.model = model;
 	}
-		
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, model, sourceLanguage, sourceText, targetLanguage, targetText);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LanguageMapEntity other = (LanguageMapEntity) obj;
+		return Objects.equals(id, other.id) && Objects.equals(model, other.model)
+				&& Objects.equals(sourceLanguage, other.sourceLanguage) && Objects.equals(sourceText, other.sourceText)
+				&& Objects.equals(targetLanguage, other.targetLanguage) && Objects.equals(targetText, other.targetText);
+	}
+
+	@Override
+	public String toString() {
+		return "LanguageMapEntity [" + (sourceLanguage != null ? "sourceLanguage=" + sourceLanguage + ", " : "")
+				+ (targetLanguage != null ? "targetLanguage=" + targetLanguage + ", " : "")
+				+ (sourceText != null ? "sourceText=" + sourceText : "") + "]";
+	}
+
 }
