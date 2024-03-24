@@ -1,8 +1,10 @@
 package com.viskuma.langtrans.eng2hebrew;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +14,7 @@ import com.viskuma.langtrans.eng2hebrew.cache.CacheUtils;
 import com.viskuma.langtrans.eng2hebrew.db.LanguageMapEntity;
 
 @RestController
-class Eng2HindiController {
+class Eng2HebrewController {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -20,11 +22,22 @@ class Eng2HindiController {
     @Autowired
     LanguageMapEntityJpaRepository repository;
     
+    @Value("${mbart.enabled:false}")
+    private String mbartEnabled;  
+	
+	@Value("${mbart.url:http://localhost:5000/translatetext}")
+    private String mbartUrl;
+    
+    @Value("${openai.url:http://localhost:5001/translatetext}")
+    private String openAiUrl;
+    
+    @CrossOrigin
     @PostMapping(path = "/tohebrew")
    // @Autowired
-    public ResponseEntity<String> convertToHindi(@RequestBody LanguageMapEntity requestBody) {
+    public ResponseEntity<String> convertToHebrew(@RequestBody LanguageMapEntity requestBody) {
     	
     	if(CacheUtils.INSTANCE.get(getKey(requestBody)) != null) {
+    		System.out.println("tohebrew : Cache hit");
     		return ResponseEntity.ok(((LanguageMapEntity)CacheUtils.INSTANCE.get(getKey(requestBody))).getTargetText());
     	}
     	
@@ -33,18 +46,21 @@ class Eng2HindiController {
     	if(targetText != null) {
     		 requestBody.setTargetText(targetText);
    		 	 CacheUtils.INSTANCE.put(getKey(requestBody), requestBody);
+   		 	System.out.println("tohebrew : DB hit");
     		 return ResponseEntity.ok(targetText);
     	}
     	ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-    	if(requestBody.getSourceText().split(" ").length <= 2) {
+    	if(requestBody.getSourceText().split(" ").length <= 2 && Boolean.valueOf(mbartEnabled)) {
         // Call the language conversion service (mocked here)
     		//MBart 
-    		response = restTemplate.postForEntity("http://localhost:5000/translatetext", requestBody, String.class);
+    		response = restTemplate.postForEntity(mbartUrl, requestBody, String.class);
     		requestBody.setModel("mbart-large-50-many-to-many-mmt");
     	}else {
     		//OpenAI
-    		response = restTemplate.postForEntity("http://localhost:5001/translatetext", requestBody, String.class);
-    		requestBody.setModel("openai-gpt-3.5-turbo");
+    		response = restTemplate.postForEntity(openAiUrl, requestBody, String.class);
+    		//requestBody.setModel("openai-gpt-3.5-turbo");
+    		System.out.println("tohebrew : OpenAI hit");
+    		requestBody.setModel("gpt-35");
     	}
         if(response.getBody() != null) {
         	requestBody.setTargetText(response.getBody());

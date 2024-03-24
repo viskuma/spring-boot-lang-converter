@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class OpenAIRestTemplateConfig {
 
-    @Value("${openai.api.key}")
+    @Value("${openai.api.key.personal}")
     private String openaiApiKey;
     
     
@@ -25,8 +25,8 @@ public class OpenAIRestTemplateConfig {
     private String trustStorePassword;
 
     @Bean
-    @Qualifier("openaiRestTemplate")
-    public RestTemplate openaiRestTemplate() {
+    @Qualifier("openaiRestTemplatePersonal")
+    public RestTemplate openaiRestTemplatePersonal() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add((request, body, execution) -> {
             request.getHeaders().add("Authorization", "Bearer " + openaiApiKey);
@@ -37,8 +37,8 @@ public class OpenAIRestTemplateConfig {
     
     
     @Bean
-    @Qualifier("openaiRestTemplateProxy")
-    public RestTemplate openaiRestTemplateProxy() {
+    @Qualifier("openaiRestTemplateProxyPersonal")
+    public RestTemplate openaiRestTemplateProxyPersonal() {
     	
     	System.setProperty("javax.net.ssl.trustStore", trustStoreFilePath);
     	System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
@@ -52,6 +52,37 @@ public class OpenAIRestTemplateConfig {
             request.getHeaders().add("Authorization", "Bearer " + openaiApiKey);
             return execution.execute(request, body);
         });
+        return restTemplate;
+    }
+    
+    @Bean
+    @Qualifier("openaiRestTemplateExternal")
+    public RestTemplate openaiRestTemplateExternal() {
+        RestTemplate restTemplate = new RestTemplate();
+//        restTemplate.getInterceptors().add((request, body, execution) -> {
+//            request.getHeaders().add("Authorization", "Bearer " + openaiApiKey);
+//            return execution.execute(request, body);
+//        });
+        return restTemplate;
+    }
+    
+    
+    @Bean
+    @Qualifier("openaiRestTemplateProxyExternal")
+    public RestTemplate openaiRestTemplateProxy() {
+    	
+    	System.setProperty("javax.net.ssl.trustStore", trustStoreFilePath);
+    	System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
+    	
+    	Proxy proxy = new Proxy(Type.HTTP, new InetSocketAddress("STLFTPPROXY", 8080));
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setProxy(proxy);
+        
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+//        restTemplate.getInterceptors().add((request, body, execution) -> {
+//            request.getHeaders().add("Authorization", "Bearer " + openaiApiKey);
+//            return execution.execute(request, body);
+//        });
         return restTemplate;
     }
     

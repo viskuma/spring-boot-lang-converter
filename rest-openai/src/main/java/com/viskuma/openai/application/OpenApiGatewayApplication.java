@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class OpenApiGatewayApplication {
 
 	 public static void main(String[] args) {
+		 System.out.println(System.getenv());
+		 
         SpringApplication.run(OpenApiGatewayApplication.class, args);
     }
 
